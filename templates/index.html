@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Workout Metrics</title>
+    <meta name="description" content="Workout Metrics">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&family=Kodchasan&family=Poppins&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+    <h1>Workout Metrics</h1>
+    <div id='container'>
+        <div id='main-content'>
+            <div class='info-col' id="top-info">
+                <h3>Last Workout</h3>
+                <h4>{{last_workout.get('title')}}</h4>
+                <div class="info-row">
+                    <div class="info-block">
+                        <h2>{{last_workout.get('distance')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                directions_bike
+                            </span>
+                            <h4>
+                                miles <br>
+                                traveled
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{last_workout.get('duration')}}</h2>
+                        <div class="info-text">
+
+                            <span class="material-icons">
+                                query_builder
+                            </span>
+                            <h4>
+
+                                minutes <br>
+                                spent
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{last_workout.get('speed')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                speed
+                            </span>
+                            <h4>
+                                average <br>
+                                mph
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{last_workout.get('output')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                lightbulb_outline
+                            </span>
+                            <h4>
+                                total <br>
+                                kj
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{last_workout.get('cals')}}</h2>
+                        <div class="info-text">
+
+                            <span class="material-icons">
+                                local_fire_department
+                            </span>
+                            <h4>
+                                calories <br>
+                                burned
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='info-col'>
+                <h3>Today's Totals</h3>
+                <div class="info-row">
+                    <div class="info-block">
+                        <h2>{{today_workout.get('distance')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                directions_bike
+                            </span>
+                            <h4>
+                                miles <br>
+                                traveled
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{today_workout.get('duration')}}</h2>
+                        <div class="info-text">
+
+                            <span class="material-icons">
+                                query_builder
+                            </span>
+                            <h4>
+
+                                minutes <br>
+                                spent
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{today_workout.get('speed')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                speed
+                            </span>
+                            <h4>
+                                average <br>
+                                mph
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{today_workout.get('output')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                lightbulb_outline
+                            </span>
+                            <h4>
+                                total <br>
+                                kj
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{today_workout.get('cals')}}</h2>
+                        <div class="info-text">
+
+                            <span class="material-icons">
+                                local_fire_department
+                            </span>
+                            <h4>
+                                calories <br>
+                                burned
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='info-col'>
+                <h3>Progress This Month</h3>
+                <div class="info-row">
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('this_month_miles')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                directions_bike
+                            </span>
+                            <h4>
+                                miles traveled<br>
+                                this month
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('this_month_active')}}</h2>
+                        <div class="info-text">
+
+                            <span class="material-icons">
+                                fitness_center
+                            </span>
+                            <h4>
+
+                                active days<br>
+                                this month
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('last_month_miles')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                directions_bike
+                            </span>
+                            <h4>
+                                miles traveled<br>
+                                last month
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('last_month_active')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                fitness_center
+                            </span>
+                            <h4>
+                                 active days<br>
+                                 last month
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='info-col'>
+                <h3>Stats:</h3>
+                <div class="info-row">
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('annual_miles')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                directions_bike
+                            </span>
+                            <h4>
+                                miles <br>
+                                this year
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('annual_minutes')}}</h2>
+                        <div class="info-text">
+
+                            <span class="material-icons">
+                                query_builder
+                            </span>
+                            <h4>
+
+                                minutes <br>
+                                this year
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('all_rides')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                done_outline
+                            </span>
+                            <h4>
+                                 bike rides<br>
+                                 all time
+                                
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="info-block">
+                        <h2>{{challenge_stats.get('week_streak')}}</h2>
+                        <div class="info-text">
+                            <span class="material-icons">
+                                date_range
+                            </span>
+                            <h4>
+                                week <br>
+                                streak
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.fog.min.js"></script>
+    <script>
+        VANTA.FOG({
+            el: "#container",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            highlightColor: 0xe1dcce,
+            midtoneColor: 0x656582,
+            lowlightColor: 0x6d389d,
+            blurFactor: 0.35,
+            speed: 0.60,
+            zoom: 0.30
+        })
+    </script>
+</body>
+
+</html>
