@@ -1,0 +1,3 @@
+[submodule "peloton_client"]
+	path = peloton_client
+	url = git@github.com:kiera-bot/peloton_client.git
