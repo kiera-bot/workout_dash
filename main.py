@@ -1,28 +1,25 @@
-import pandas
 from datetime import datetime, timedelta
-from time import time  #dont think im using this anymore
 from pprint import pprint
-from flask import Flask
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import url_for
+
+import pandas
 from absl import flags
+from flask import Flask, redirect, render_template, request, url_for
+
 from peloton_client import peloton_client
 
 app = Flask(__name__)
 
-client = peloton_client.PelotonClient(username="banana",
+# Change this to take username / password from flags
+# https://abseil.io/docs/python/guides/flags
+# https://docs.python.org/3/library/argparse.html
+CLIENT = peloton_client.PelotonClient(username="banana",
                                       password="anotherbanana")
-
-# needs optimization pass
-# today's stats are borked
 
 
 def get_challenge_data():
-    my_stats = client.fetch_user_data()
+    my_stats = CLIENT.fetch_user_data()
     my_stats = my_stats[0]
-    my_challenges = client.fetch_user_challenges_current()
+    my_challenges = CLIENT.fetch_user_challenges_current()
     current_stats = extract_challenge_data(my_challenges.get('challenges'))
 
     now = datetime.now(
@@ -33,7 +30,7 @@ def get_challenge_data():
         '%Y')  #these seem to be the bottlenecks. will need to test.
     last_month = now.replace(day=1) - timedelta(1)
 
-    my_challenges_past = client.fetch_user_challenges_past()
+    my_challenges_past = CLIENT.fetch_user_challenges_past()
     past_stats = extract_past_challenge_data(
         my_challenges_past.get('challenges'))
 
@@ -111,7 +108,7 @@ def calculate_year_miles(input_data):
 def get_today_data():
     # Need to write in logic in case there is no data for the day
     # hmmmmmmm this is not adding up correctly. Something is borked with pandas.to_datetime('today').normalize() see line 138
-    workouts = client.fetch_workouts()
+    workouts = CLIENT.fetch_workouts()
     workouts_df = pandas.DataFrame(workouts)
     workouts_df['created_at'] = pandas.to_datetime(workouts_df['created_at'],
                                                    unit='s')
@@ -124,7 +121,7 @@ def get_today_data():
     workouts_df = workouts_df.loc[today_mask]
     print(workouts_df)
     workouts = [
-        client.fetch_workout_metrics(x) for x in workouts_df.id.to_list()
+        CLIENT.fetch_workout_metrics(x) for x in workouts_df.id.to_list()
     ]
     workout_metrics_df = pandas.DataFrame(workouts)
     summary = workout_metrics_df['summaries']
@@ -151,9 +148,9 @@ def get_today_data():
 
 
 def get_last_workout_data():
-    workouts = client.fetch_workouts(limit=1)
+    workouts = CLIENT.fetch_workouts(limit=1)
     last_workout = workouts[0]
-    last_workout_metrics = client.fetch_workout_metrics(last_workout.get('id'))
+    last_workout_metrics = CLIENT.fetch_workout_metrics(last_workout.get('id'))
 
     last_workout_core_stats = extract_data(
         last_workout_metrics.get('summaries'))
@@ -171,18 +168,21 @@ def get_last_workout_data():
     }
     return output_dict
 
+
 @app.route('/')
 def index():
-    #run the functions. pass the data through the render template.
     last_workout = get_last_workout_data()
-    today_workout = get_today_data()
-    challenge_stats = get_challenge_data()
-    # pprint(workout_stats)
+    pprint(last_workout)
+    raise Exception
+    # today_workout = get_today_data()
+    # challenge_stats = get_challenge_data()
 
-    return render_template("index.html",
-                           last_workout=last_workout,
-                           today_workout=today_workout,
-                           challenge_stats=challenge_stats)
+    return render_template(
+        "index.html",
+        last_workout=last_workout,
+        #  today_workout=today_workout,
+        #  challenge_stats=challenge_stats,
+    )
 
 
 if __name__ == '__main__':
