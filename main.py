@@ -88,16 +88,16 @@ def extract_past_challenge_data(input_data):
 
 
 def calculate_year_miles(input_data):
-    meh = datetime.now().replace(month=1,
-                                 day=1,
-                                 hour=0,
-                                 minute=0,
-                                 second=0,
-                                 microsecond=0).timestamp()
+    this_year = datetime.now().replace(month=1,
+                                       day=1,
+                                       hour=0,
+                                       minute=0,
+                                       second=0,
+                                       microsecond=0).timestamp()
     year_sum = 0
     for x in input_data:
         if x.get('challenge_summary').get(
-                'end_time') >= meh and 'Cycling Challenge' in x.get(
+                'end_time') >= this_year and 'Cycling Challenge' in x.get(
                     'challenge_summary').get('title'):
             year_sum += x.get('progress').get('metric_value')
         else:
@@ -106,44 +106,41 @@ def calculate_year_miles(input_data):
 
 
 def get_today_data():
-    # Need to write in logic in case there is no data for the day
-    # hmmmmmmm this is not adding up correctly. Something is borked with pandas.to_datetime('today').normalize() see line 138
     workouts = CLIENT.fetch_workouts()
     workouts_df = pandas.DataFrame(workouts)
-    workouts_df['created_at'] = pandas.to_datetime(workouts_df['created_at'],
-                                                   unit='s')
+    today_mask = workouts_df.created_at >= datetime.now().replace(
+        hour=0, minute=0, second=0).timestamp()
     print(workouts_df)
-    today_mask = (workouts_df.created_at >=
-                  pandas.to_datetime('today').normalize())
-    test = pandas.to_datetime('today').normalize()
-    print(test)
-    print(today_mask)
-    workouts_df = workouts_df.loc[today_mask]
-    print(workouts_df)
-    workouts = [
-        CLIENT.fetch_workout_metrics(x) for x in workouts_df.id.to_list()
-    ]
-    workout_metrics_df = pandas.DataFrame(workouts)
-    summary = workout_metrics_df['summaries']
-    print(summary)
-    average_summary = workout_metrics_df['average_summaries']
-    core_metrics_df = summary.apply(extract_data)
-    core_metrics_df = core_metrics_df.apply(pandas.Series)
-    core_averages_df = average_summary.apply(extract_data)
-    core_averages_df = core_averages_df.apply(pandas.Series)
 
-    output_dict = {
-        'distance':
-        round(core_metrics_df.distance.sum(), 0),
-        'output':
-        core_metrics_df.total_output.sum(),
-        'cals':
-        core_metrics_df.calories.sum(),
-        'speed':
-        round(core_averages_df.avg_speed.mean(), 0),
-        'duration':
-        round(workouts_df.total_video_watch_time_seconds.sum() / 60, 0),
-    }
+    try:
+        workouts_df = workouts_df.loc[today_mask]
+        print(workouts_df)
+        workouts = [
+            CLIENT.fetch_workout_metrics(x) for x in workouts_df.id.to_list()
+        ]
+        workout_metrics_df = pandas.DataFrame(workouts)
+        summary = workout_metrics_df['summaries']
+        average_summary = workout_metrics_df['average_summaries']
+        core_metrics_df = summary.apply(extract_data)
+        core_metrics_df = core_metrics_df.apply(pandas.Series)
+        core_averages_df = average_summary.apply(extract_data)
+        core_averages_df = core_averages_df.apply(pandas.Series)
+
+        output_dict = {
+            'distance':
+            round(core_metrics_df.distance.sum(), 0),
+            'output':
+            core_metrics_df.total_output.sum(),
+            'cals':
+            core_metrics_df.calories.sum(),
+            'speed':
+            round(core_averages_df.avg_speed.mean(), 0),
+            'duration':
+            round(workouts_df.total_video_watch_time_seconds.sum() / 60, 0),
+        }
+    except:
+        print("no data today")
+        output_dict = {}
     return output_dict
 
 
