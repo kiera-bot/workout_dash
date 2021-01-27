@@ -9,9 +9,7 @@ from peloton_client import peloton_client
 
 FLASK_APP = Flask(__name__)
 
-# Change this to take username / password from flags
 # https://abseil.io/docs/python/guides/flags
-# https://docs.python.org/3/library/argparse.html
 FLAGS = flags.FLAGS
 flags.DEFINE_string('peloton_username', 'none', 'Your Peloton username.')
 flags.DEFINE_string('peloton_password', 'none', 'Your Peloton password.')
@@ -111,11 +109,10 @@ def get_today_data():
     workouts_df = pandas.DataFrame(workouts)
     today_mask = workouts_df.created_at >= datetime.now().replace(
         hour=0, minute=0, second=0).timestamp()
-    print(workouts_df)
+ 
 
     try:
         workouts_df = workouts_df.loc[today_mask]
-        print(workouts_df)
         workouts = [
             CLIENT.fetch_workout_metrics(x) for x in workouts_df.id.to_list()
         ]
