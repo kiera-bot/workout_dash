@@ -2,18 +2,19 @@ from datetime import datetime, timedelta
 from pprint import pprint
 
 import pandas
-from absl import flags
+from absl import app, flags, logging
 from flask import Flask, redirect, render_template, request, url_for
 
 from peloton_client import peloton_client
 
-app = Flask(__name__)
+FLASK_APP = Flask(__name__)
 
 # Change this to take username / password from flags
 # https://abseil.io/docs/python/guides/flags
 # https://docs.python.org/3/library/argparse.html
-CLIENT = peloton_client.PelotonClient(username="banana",
-                                      password="anotherbanana")
+FLAGS = flags.FLAGS
+flags.DEFINE_string('peloton_username', 'none', 'Your Peloton username.')
+flags.DEFINE_string('peloton_password', 'none', 'Your Peloton password.')
 
 
 def get_challenge_data():
@@ -166,21 +167,28 @@ def get_last_workout_data():
     return output_dict
 
 
-@app.route('/')
+@FLASK_APP.route('/')
 def index():
     last_workout = get_last_workout_data()
-    pprint(last_workout)
-    raise Exception
-    # today_workout = get_today_data()
-    # challenge_stats = get_challenge_data()
+    # pprint(last_workout)
+    # raise Exception
+    today_workout = get_today_data()
+    challenge_stats = get_challenge_data()
 
     return render_template(
         "index.html",
         last_workout=last_workout,
-        #  today_workout=today_workout,
-        #  challenge_stats=challenge_stats,
+         today_workout=today_workout,
+         challenge_stats=challenge_stats,
     )
 
+def main(argv):
+    print(FLAGS.peloton_username)
+    print(FLAGS.peloton_password)
+    global CLIENT
+    CLIENT = peloton_client.PelotonClient(username=FLAGS.peloton_username,
+                                      password=FLAGS.peloton_password)
+    FLASK_APP.run(host='127.0.0.1', port=8080, debug=True)
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(main)
