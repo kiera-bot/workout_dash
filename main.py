@@ -185,7 +185,7 @@ def main(argv):
     global CLIENT
     CLIENT = peloton_client.PelotonClient(username=FLAGS.peloton_username,
                                       password=FLAGS.peloton_password)
-    FLASK_APP.run(host='127.0.0.1', port=8080, debug=True)
+    FLASK_APP.run(host="0.0.0.0", port=8080, debug=True)
 
 if __name__ == '__main__':
     app.run(main)
