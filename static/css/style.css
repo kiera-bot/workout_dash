@@ -10,7 +10,14 @@ body {
     padding: 0;
     margin: 0;
     font-family: 'IBM Plex Sans', sans-serif;
-    background-color: #E2D4D9;
+    background-color: #0091BA;
+}
+
+canvas {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    overflow-x: visible;
 }
 
 h2,
@@ -29,27 +36,30 @@ h1 {
     width: 100%;
     background-color: rgb(12, 8, 12);
     text-align: center;
+    z-index: 2;
 }
 
 #container {
-    height:100%;
-    margin-bottom: 30px;
+    height:100%; 
+   
 }
 
 #main-content {
     display: flex;
     flex-direction: column;
-    margin-top: 5%;
     margin-left: auto;
     margin-right: auto;
     width: 90%;
     justify-content: center;
+    z-index: 2;
+    padding-bottom: 40px;
 }
 
 
 .info-col {
-    background-color: rgba(255, 255, 255, 0.473);
+    background-color: rgba(255, 255, 255, 0.673);
     margin-top: 40px;
+    z-index: 2;
 }
 
 
@@ -72,6 +82,7 @@ h1 {
     flex-wrap: nowrap;
     justify-content: space-evenly;
     padding: 10px;
+    z-index: 2;
 }
 
 .info-block {
@@ -108,19 +119,17 @@ h1 {
     width: 10px;
 }
 
-#top-info {
-    margin-top: 50px;
-}
-
 #footer {
     height: 50px;
     width: 100%;
     background-color: rgb(12, 8, 12);
+    z-index: 2;
 }
 
-.vanta-canvas {
+
+/* .vanta-canvas {
     height: 100%;
-}
+} */
 
 /* @media only screen and (min-device-width: 732px) and (max-device-width: px) {}*/
 
