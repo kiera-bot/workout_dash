@@ -167,8 +167,6 @@ def get_last_workout_data():
 @FLASK_APP.route('/')
 def index():
     last_workout = get_last_workout_data()
-    # pprint(last_workout)
-    # raise Exception
     today_workout = get_today_data()
     challenge_stats = get_challenge_data()
 
